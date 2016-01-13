@@ -12,16 +12,16 @@ import org.bytedeco.javacpp._
 object Main {
   def main(args: Array[String]) {
 
-    val img: Mat = OpenCVUtils.loadOrExit(new File("test.jpg"))
+    val img: Mat = OpenCVUtils.loadOrExit(new File("img/test.jpg"))
     val grayImg = new Mat()
 
     cvtColor(img, grayImg, COLOR_RGB2GRAY)
 
-    imwrite(s"sift.jpg", Sift.withKeyPoints(grayImg))
+    imwrite(s"img/sift.jpg", Sift.withKeyPoints(grayImg))
 
     val parts = Pyramid.split(grayImg)
     parts.zipWithIndex.foreach {
-      case (mat, i) => imwrite(s"sift$i.jpg", Sift.withKeyPoints(mat))
+      case (mat, i) => imwrite(s"img/sift$i.jpg", Sift.withKeyPoints(mat))
     }
 
     //val hogDescriptors: Array[Float]
