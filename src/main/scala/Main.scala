@@ -1,57 +1,41 @@
-import java.io.PrintWriter
+import java.io.{File, PrintWriter}
+import java.nio.FloatBuffer
 
-
-import org.opencv.core._
-import org.opencv.features2d.{DescriptorExtractor, FeatureDetector, Features2d}
-import org.opencv.imgcodecs.Imgcodecs
-import org.opencv.imgproc.Imgproc
-import org.opencv.objdetect.HOGDescriptor
-
+import org.bytedeco.javacpp.annotation.StdVector
+import org.bytedeco.javacpp.opencv_core._
+import org.bytedeco.javacpp.opencv_features2d._
+import org.bytedeco.javacpp.opencv_objdetect.HOGDescriptor
+import org.bytedeco.javacpp.opencv_imgcodecs._
+import org.bytedeco.javacpp.opencv_imgproc._
+import org.bytedeco.javacpp._
 
 object Main {
   def main(args: Array[String]) {
-    System.loadLibrary(Core.NATIVE_LIBRARY_NAME)
 
-    val img = Imgcodecs.imread("img/mug.jpg")
+    val img: Mat = OpenCVUtils.loadOrExit(new File("test.jpg"))
     val grayImg = new Mat()
 
-    Imgproc.cvtColor(img, grayImg, Imgproc.COLOR_RGB2GRAY)
+    cvtColor(img, grayImg, COLOR_RGB2GRAY)
 
-    //    val parts = util.split(grayImg)
-    //    parts.forEachIndexed { i, mat ->
-    //        Imgcodecs.imwrite("img/mug$i.jpg", mat)
-    //        util.split(mat).forEachIndexed { j, mat ->
-    //            Imgcodecs.imwrite("img/mug$i-$j.jpg", mat)
-    //        }
-    //    }
+    imwrite(s"sift.jpg", Sift.withKeyPoints(grayImg))
 
-    val hogDescriptors = new MatOfFloat()
-    val winSize = new Size(128.0, 128.0)
-    val blockSize = new Size(16.0, 16.0)
-    val blockStride = new Size(8.0, 8.0)
-    val cellSize = new Size(8.0, 8.0)
+    val parts = Pyramid.split(grayImg)
+    parts.zipWithIndex.foreach {
+      case (mat, i) => imwrite(s"sift$i.jpg", Sift.withKeyPoints(mat))
+    }
+
+    //val hogDescriptors: Array[Float]
+    val winSize = new Size(128, 128)
+    val blockSize = new Size(16, 16)
+    val blockStride = new Size(8, 8)
+    val cellSize = new Size(8, 8)
     val nbins = 9
+
+    //val hogBuffer = FloatB
     val hog = new HOGDescriptor(winSize, blockSize, blockStride, cellSize, nbins)
-    Imgproc.resize(grayImg, grayImg, winSize)
-    hog.compute(grayImg, hogDescriptors)
+    resize(grayImg, grayImg, winSize)
+    //hog.compute(grayImg, hogDescriptors)
     //new PrintWriter("hog.txt").print(hogDescriptors.dump())
-
-    val orb = DescriptorExtractor.create(DescriptorExtractor.ORB)
-    val keyPoints = new MatOfKeyPoint()
-    val orbDesc = new MatOfDouble()
-    orb.compute(img, keyPoints, orbDesc)
-    new  PrintWriter("orb.txt").print(orbDesc.dump())
-
-    val fast = FeatureDetector.create(FeatureDetector.FAST)
-    fast.detect(img, keyPoints)
-
-    val outputImage = new Mat()
-    val color = new Scalar(0.0, 0.0, 255.0)
-    val flags = Features2d.DRAW_RICH_KEYPOINTS; // draw circles
-    Features2d.drawKeypoints(img, keyPoints, outputImage, color, flags)
-
-    Imgcodecs.imwrite("img/mug_keypoints.jpg", outputImage)
-
 
   }
 }

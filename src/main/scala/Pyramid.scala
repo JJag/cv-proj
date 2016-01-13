@@ -1,7 +1,9 @@
-import org.opencv.core.{Rect, Mat}
+import org.bytedeco.javacpp.opencv_core.{Rect, Mat}
 
 object Pyramid {
+
   def split(img: Mat): List[Mat] = {
+
     val width: Int = img.cols()
     val halfWidth: Int = width / 2
     val height: Int = img.rows()
