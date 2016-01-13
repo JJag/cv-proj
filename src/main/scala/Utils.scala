@@ -6,13 +6,13 @@ object Utils {
       if(n == 0)
         col.map(identity)
       else
-        col.map(f).flatMap(_.repeat(n - 1, f))
+        col ++ col.map(f).flatMap(_.repeat(n - 1, f))
     }
   }
 
   def main(args: Array[String]) {
-    def f[T](x:T) = Seq.fill(2)(x)
-    val xs = List(1, 2).repeat(3, f)
+    def f(x:Int) = Seq.fill(2)(x / 2)
+    val xs = List(16).repeat(2, f)
     println(xs)
   }
 }
