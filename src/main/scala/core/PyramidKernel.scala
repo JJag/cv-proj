@@ -1,4 +1,4 @@
-package ml
+package core
 
 import weka.classifiers.functions.supportVector.Kernel
 import weka.core._

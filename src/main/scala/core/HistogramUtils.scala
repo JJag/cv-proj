@@ -1,3 +1,5 @@
+package core
+
 object HistogramUtils {
 
   def intersection(h1: Array[Float], h2: Array[Float]): Float = {

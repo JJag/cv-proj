@@ -1,8 +1,11 @@
-import Utils._
+package core
+
 import org.bytedeco.javacpp.FloatPointer
 import org.bytedeco.javacpp.opencv_core.{Mat, Size}
 import org.bytedeco.javacpp.opencv_imgproc._
 import org.bytedeco.javacpp.opencv_objdetect.HOGDescriptor
+import util.Utils
+import util.Utils._
 
 import scala.collection._
 

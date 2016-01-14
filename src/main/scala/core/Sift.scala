@@ -1,8 +1,11 @@
+package core
+
 import org.bytedeco.javacpp.opencv_core._
 import org.bytedeco.javacpp.opencv_features2d._
+import org.bytedeco.javacpp.opencv_imgproc._
 import org.bytedeco.javacpp.opencv_xfeatures2d.SIFT
 
-object Sift{
+object Sift {
 
   private val sift: SIFT = {
     val nFeatures = 0
@@ -12,7 +15,22 @@ object Sift{
     val sigma = 1.6
     SIFT.create(nFeatures, nOctaveLayers, contrastThreshold, edgeThreshold, sigma)
   }
-
+/*
+  def denseSift(img: Mat): Mat = {
+    val descriptors = new Mat
+    val scaledImg = new Mat
+    resize(img, scaledImg, new Size(256, 256))
+    val step = 16
+    var index = 0
+    val arr: Array[KeyPoint] = (for {
+      x <- step until 256 - step by step
+      y <- step until 256 - step by step
+    } yield new KeyPoint(x, y, step)).toArray
+    val keyPoints = util.Proxy.createKeyPointVector(arr)
+    sift.compute(scaledImg, keyPoints, descriptors)
+    descriptors
+  }
+*/
   def detect(img: Mat): KeyPointVector = {
     val keyPoints = new KeyPointVector()
     sift.detect(img, keyPoints)

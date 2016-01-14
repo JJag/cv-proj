@@ -1,4 +1,6 @@
-import org.bytedeco.javacpp.opencv_core.{Rect, Mat}
+package core
+
+import org.bytedeco.javacpp.opencv_core.{Mat, Rect}
 
 object Pyramid {
 
